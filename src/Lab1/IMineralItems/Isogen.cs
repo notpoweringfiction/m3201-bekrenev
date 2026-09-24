@@ -1,9 +1,8 @@
 namespace Itmo.ObjectOrientedProgramming.Lab1;
 
-public class Isogen : IMineralItem
+public class Isogen : IMineral
 {
-    public Isogen(int isogenStartQty = 0) : base
-    (startQty: isogenStartQty)
+    public Isogen()
     {
     }
 }

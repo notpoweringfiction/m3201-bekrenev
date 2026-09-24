@@ -1,9 +1,8 @@
 namespace Itmo.ObjectOrientedProgramming.Lab1;
 
-public class Tritanium : IMineralItem
+public class Tritanium : IMineral
 {
-    public Tritanium(int tritaniumStartQty = 0) : base
-    (startQty: tritaniumStartQty)
+    public Tritanium()
     {
     }
 }

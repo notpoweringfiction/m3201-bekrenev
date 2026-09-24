@@ -1,8 +1,8 @@
 namespace Itmo.ObjectOrientedProgramming.Lab1;
 
-public class Pyerite : IMineral
+public abstract class IMineral
 {
-    public Pyerite()
+    protected IMineral()
     {
     }
 }
