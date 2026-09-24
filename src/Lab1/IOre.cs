@@ -10,18 +10,28 @@ public abstract class IOre
 
     protected IOre(decimal volume, decimal volumePerUnit, IReadOnlyDictionary<Type, int> refinementMineralsList)
     {
-        Volume = volume;
-        VolumePerUnit = volumePerUnit;
+        if (volume < 0 || volumePerUnit < 0)
+        {
+            throw new ArgumentException("Negative volume or volume per point")
+        }
 
         Dictionary<Type, int> mineralDict = new();
 
         foreach (KeyValuePair<Type, int> pair in refinementMineralsList)
         {
+            if (pair.Value < 0)
+            {
+                throw new ArgumentException("Negative mineral output");
+            }
+
             if (!typeof(IMineral).IsAssignableFrom(pair.Key))
             {
                 mineralDict.Add(pair.Key, pair.Value);
             }
         }
+
+        Volume = volume;
+        VolumePerUnit = volumePerUnit;
 
         RefineOutputList = mineralDict;
     }
