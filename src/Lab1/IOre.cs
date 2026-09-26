@@ -12,7 +12,7 @@ public abstract class IOre
     {
         if (volume < 0 || volumePerUnit < 0)
         {
-            throw new ArgumentException("Negative volume or volume per point")
+            throw new ArgumentException("Negative volume or volume per point");
         }
 
         Dictionary<Type, int> mineralDict = new();

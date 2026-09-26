@@ -6,9 +6,9 @@ public class AsteroidBelt
 
     public int Distance { get; }
 
-    public IOreItem BeltOre { get; }
+    public IOre BeltOre { get; }
 
-    public AsteroidBelt(string name, int dist, IOreItem ore)
+    public AsteroidBelt(string name, int dist, IOre ore)
     {
         Name = name;
         Distance = dist;
