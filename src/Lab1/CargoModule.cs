@@ -2,11 +2,9 @@ namespace Itmo.ObjectOrientedProgramming.Lab1;
 
 public class CargoModule
 {
-    public IReadOnlyDictionary<Type, int> CargoStorage { get; } = new Dictionary<Type, int>();
+    public int MaxCargoStorage { get; init; }
 
-    public int MaxCargoStorage { get; }
-
-    public int StorageLeft { get; }
+    public int StorageLeft { get; private set; }
 
     public CargoModule(int maxCargoHold)
     {
@@ -16,5 +14,18 @@ public class CargoModule
         }
 
         MaxCargoStorage = maxCargoHold;
+    }
+
+    public int StoreCargo(int cargoAmount)
+    {
+        if (cargoAmount < 0) return 0;
+        int stored = Math.Min(cargoAmount, StorageLeft);
+        StorageLeft -= stored;
+        return stored;
+    }
+
+    public void ClearStorage()
+    {
+        StorageLeft = MaxCargoStorage;
     }
 }
