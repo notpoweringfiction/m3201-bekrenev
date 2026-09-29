@@ -1,6 +1,6 @@
 namespace Itmo.ObjectOrientedProgramming.Lab1;
 
-public abstract class IMineral
+public abstract record IMineral
 {
     protected IMineral()
     {

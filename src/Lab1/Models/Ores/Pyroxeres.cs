@@ -1,14 +1,14 @@
-namespace Itmo.ObjectOrientedProgramming.Lab1;
+namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Ores;
 
-public class Pyroxeres : IOre
+public record Pyroxeres : IOre
 {
     public Pyroxeres(decimal oreVolume) : base(
         volume: oreVolume,
         volumePerUnit: 0.3m,
         refinementMineralsList: new Dictionary<Type, int>
         {
-            [typeof(Pyerite)] = 45,
-            [typeof(Mexallon)] = 15,
+            [typeof(Minerals.Pyerite)] = 45,
+            [typeof(Minerals.Mexallon)] = 15,
         })
     {
     }

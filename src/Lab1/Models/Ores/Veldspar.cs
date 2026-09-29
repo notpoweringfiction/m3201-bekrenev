@@ -1,3 +1,14 @@
-﻿namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Ores;
+namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Ores;
 
-public record Veldspar();
+public record Veldspar : IOre
+{
+    public Veldspar(decimal oreVolume) : base(
+        volume: oreVolume,
+        volumePerUnit: 0.1m,
+        refinementMineralsList: new Dictionary<Type, int>
+        {
+            [typeof(Minerals.Tritanium)] = 200,
+        })
+    {
+    }
+}

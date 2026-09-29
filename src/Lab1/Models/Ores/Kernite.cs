@@ -1,14 +1,14 @@
-namespace Itmo.ObjectOrientedProgramming.Lab1;
+namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Ores;
 
-public class Kernite : IOre
+public record Kernite : IOre
 {
     public Kernite(decimal oreVolume) : base(
         volume: oreVolume,
         volumePerUnit: 1.2m,
         refinementMineralsList: new Dictionary<Type, int>
         {
-            [typeof(Mexallon)] = 30,
-            [typeof(Isogen)] = 60,
+            [typeof(Minerals.Mexallon)] = 30,
+            [typeof(Minerals.Isogen)] = 60,
         })
     {
     }

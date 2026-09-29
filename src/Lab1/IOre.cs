@@ -1,12 +1,12 @@
 namespace Itmo.ObjectOrientedProgramming.Lab1;
 
-public abstract class IOre
+public abstract record class IOre
 {
-    public IReadOnlyDictionary<Type, int> RefineOutputList { get; }
+    public IReadOnlyDictionary<Type, int> RefineOutputList { get; init; }
 
-    public decimal Volume { get; }
+    public decimal Volume { get; init; }
 
-    public decimal VolumePerUnit { get; }
+    public decimal VolumePerUnit { get; init; }
 
     protected IOre(decimal volume, decimal volumePerUnit, IReadOnlyDictionary<Type, int> refinementMineralsList)
     {
