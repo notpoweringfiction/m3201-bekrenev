@@ -26,8 +26,16 @@ public class VolumeContract : IContract
         ContractVolume = contractVolume;
     }
 
-    public override ContractResults ExecuteContract()
+    public override ExecutionResults ExecuteContract()
     {
+        if (!ValidationResults.Success)
+        {
+            return new ExecutionResults(
+                Success: false,
+                ErrorMessage: ValidationResults.ErrorMessage,
+                Results: null);
+        }
+
         int totalHarvestedOre = 0;
         decimal volumeLeft = ContractVolume;
         int totalTime = 0;
@@ -53,14 +61,17 @@ public class VolumeContract : IContract
             curCycle++;
         }
 
-        return new ContractResults(
-            WorkTime: totalTime,
-            HarvestCyclesAmount: curCycle--,
-            TotalHarvestedVolume: totalHarvestedOre,
-            StoragedMinerals: new Dictionary<Type, int>(),
-            TotalRevenue: totalRevenue,
-            TotalRent: totalTime * ContractFleet.UpkeerPerTimeUnit,
-            TaxesAmount: taxes,
-            NetProfit: netProfit);
+        return new ExecutionResults(
+            Success: true,
+            ErrorMessage: null,
+            Results: new ContractResults(
+                WorkTime: totalTime,
+                HarvestCyclesAmount: curCycle--,
+                TotalHarvestedVolume: totalHarvestedOre,
+                StoragedMinerals: new Dictionary<Type, int>(),
+                TotalRevenue: totalRevenue,
+                TotalRent: totalTime * ContractFleet.UpkeerPerTimeUnit,
+                TaxesAmount: taxes,
+                NetProfit: netProfit));
     }
 }

@@ -24,10 +24,22 @@ public class TimeContract : IContract
     {
         TimeToField = selectedBelt.Distance / selectedFleet.Speed;
         ContractTime = contractTime;
+
+        ValidationInfo valid = ValidateContract();
+
+        ValidationResults = ValidationResults.Success ? valid : ValidationResults;
     }
 
-    public override ContractResults ExecuteContract()
+    public override ExecutionResults ExecuteContract()
     {
+        if (!ValidationResults.Success)
+        {
+            return new ExecutionResults(
+                Success: false,
+                ErrorMessage: ValidationResults.ErrorMessage,
+                Results: null);
+        }
+
         int totalHarvestedOre = 0;
         int timeLeft = ContractTime;
         int totalTripTime = (TimeToField * 2) + 1;
@@ -51,14 +63,30 @@ public class TimeContract : IContract
             curCycle++;
         }
 
-        return new ContractResults(
-            WorkTime: ContractTime - timeLeft,
-            HarvestCyclesAmount: curCycle--,
-            TotalHarvestedVolume: totalHarvestedOre,
-            StoragedMinerals: new Dictionary<Type, int>(),
-            TotalRevenue: totalRevenue,
-            TotalRent: (ContractTime - timeLeft) * ContractFleet.UpkeerPerTimeUnit,
-            TaxesAmount: taxes,
-            NetProfit: netProfit);
+        return new ExecutionResults(
+            Success: true,
+            ErrorMessage: null,
+            Results: new ContractResults(
+                WorkTime: ContractTime - timeLeft,
+                HarvestCyclesAmount: curCycle--,
+                TotalHarvestedVolume: totalHarvestedOre,
+                StoragedMinerals: new Dictionary<Type, int>(),
+                TotalRevenue: totalRevenue,
+                TotalRent: (ContractTime - timeLeft) * ContractFleet.UpkeerPerTimeUnit,
+                TaxesAmount: taxes,
+                NetProfit: netProfit));
+    }
+
+    private ValidationInfo ValidateContract()
+    {
+        return (TimeToField * 2) + 2 <= ContractTime
+        ?
+            new ValidationInfo(
+                Success: true,
+                ErrorMessage: null)
+        :
+            new ValidationInfo(
+                Success: false,
+                ErrorMessage: "Contract time too short");
     }
 }
