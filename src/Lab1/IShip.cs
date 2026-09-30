@@ -4,9 +4,9 @@ public abstract class IShip
 {
     public CargoModule CargoHold { get; }
 
-    public int Speed { get; }
+    public int Speed { get; init; }
 
-    public int RentRate { get; }
+    public int RentRate { get; init; }
 
     protected IShip(int maxCargoHold, int maxSpeed, int rentRate)
     {

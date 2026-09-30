@@ -24,7 +24,7 @@ public abstract record class IOre
                 throw new ArgumentException("Negative mineral output");
             }
 
-            if (!typeof(IMineral).IsAssignableFrom(pair.Key))
+            if (!pair.Key.IsAssignableTo(typeof(IMineral)))
             {
                 mineralDict.Add(pair.Key, pair.Value);
             }

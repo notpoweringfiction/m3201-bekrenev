@@ -2,11 +2,13 @@ namespace Itmo.ObjectOrientedProgramming.Lab1;
 
 public class Fleet
 {
-    public IReadOnlyCollection<IShip> Ships { get; }
+    public IReadOnlyCollection<IShip> Ships { get; init; }
 
-    public IStrategy Strategy { get; }
+    public IStrategy Strategy { get; init; }
 
-    public int FleetSpeed { get; }
+    public int Speed { get; init; }
+
+    public int UpkeerPerTimeUnit { get; init; }
 
     public Fleet(IReadOnlyCollection<IShip> shipsList, IStrategy fleetStrategy)
     {
@@ -15,7 +17,16 @@ public class Fleet
             throw new ArgumentException("No ships in fleet");
         }
 
-        Ships = shipsList.ToList();
+        int maxShipSpeed = 0;
+        int totalUpkeep = 0;
+        foreach (IShip ship in shipsList)
+        {
+            maxShipSpeed = Math.Min(maxShipSpeed, ship.Speed);
+            totalUpkeep += ship.RentRate;
+        }
+
+        Speed = maxShipSpeed;
+        Ships = shipsList;
         Strategy = fleetStrategy;
     }
 

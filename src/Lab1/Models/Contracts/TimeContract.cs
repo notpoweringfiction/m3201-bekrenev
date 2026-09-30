@@ -47,6 +47,7 @@ public class TimeContract : IContract
             totalRevenue += mineralSaleReport.TotalRevenue;
             taxes += mineralSaleReport.Taxes;
             netProfit += mineralSaleReport.NetProfit;
+            ContractFleet.Strategy.ClearStorages(ContractFleet.Ships);
             curCycle++;
         }
 
