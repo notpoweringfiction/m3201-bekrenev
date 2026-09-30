@@ -1,4 +1,4 @@
-using OreDataPack = Itmo.ObjectOrientedProgramming.Lab1.PairDataPack<Itmo.ObjectOrientedProgramming.Lab1.IOre, int>;
+using OreDataPack = Itmo.ObjectOrientedProgramming.Lab1.PairDataPack<Itmo.ObjectOrientedProgramming.Lab1.IOre, decimal>;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1;
 
@@ -31,9 +31,9 @@ public class Station
 
     public void ProcessOres(OreDataPack oreInput)
     {
-        foreach (KeyValuePair<Type, int> mineralPair in oreInput.First.RefineOutputList)
+        foreach (KeyValuePair<Type, decimal> mineralPair in oreInput.First.RefineOutputList)
         {
-            int totalMineralAmount = mineralPair.Value * oreInput.Second;
+            int totalMineralAmount = (int)(mineralPair.Value * oreInput.Second * oreInput.First.VolumePerUnit);
             MineralStorage.TryAdd(mineralPair.Key, 0);
             MineralStorage[mineralPair.Key] += totalMineralAmount;
         }

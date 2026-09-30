@@ -54,7 +54,7 @@ public class TimeContract : IContract
             timeLeft -= totalTripTime;
             int curCycleHarvest = HarvestCycle(curCycle);
             if (totalHarvestedOre > 0) timeLeft--;
-            ContractStation.ProcessOres(new PairDataPack<IOre, int>(TargetAsteroidBelt.BeltOre, curCycleHarvest));
+            ContractStation.ProcessOres(new PairDataPack<IOre, decimal>(TargetAsteroidBelt.BeltOre, curCycleHarvest));
             Station.SaleReport mineralSaleReport = ContractStation.SellMinerals(PriceList);
             totalRevenue += mineralSaleReport.TotalRevenue;
             taxes += mineralSaleReport.Taxes;

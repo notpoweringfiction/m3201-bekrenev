@@ -13,11 +13,27 @@ public class Calculator
     {
         _firstDependency = firstDependency;
     }
-
-    public CalculationResult Calculate(Contract contract)
-    {
-        // Some calculations...
-        return CalculationResult.Failure("Например, нарушены условия создания контракта");
-    }
     */
+
+    public record CalculationResult
+    {
+        public record Success(IContract.ContractResults Results) : CalculationResult
+        {
+        }
+
+        public record Failure(string ErrorMessage) : CalculationResult
+        {
+        }
+    }
+
+    public CalculationResult Calculate(IContract contract)
+    {
+        IContract.ContractResults fallback = new(WorkTime: 0, HarvestCyclesAmount: 0, TotalHarvestedVolume: 0, StoragedMinerals: new Dictionary<Type, int>(), TotalRevenue: 0, TotalRent: 0, TaxesAmount: 0, NetProfit: 0);
+
+        IContract.ExecutionResults results = contract.ExecuteContract();
+
+        return results.Success ?
+        new CalculationResult.Success(results?.Results ?? fallback)
+        : new CalculationResult.Failure(results?.ErrorMessage ?? "Unknown error");
+    }
 }

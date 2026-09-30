@@ -59,7 +59,7 @@ public abstract class IContract
                 ErrorMessage: "Fleet can't mine first cycle");
         }
 
-        foreach (KeyValuePair<Type, int> mineralOutput in TargetAsteroidBelt.BeltOre.RefineOutputList)
+        foreach (KeyValuePair<Type, decimal> mineralOutput in TargetAsteroidBelt.BeltOre.RefineOutputList)
         {
             if (!PriceList.PriceList.ContainsKey(mineralOutput.Key))
             {
