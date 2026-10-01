@@ -1,6 +1,6 @@
 namespace Itmo.ObjectOrientedProgramming.Lab1;
 
-public class Prospect : IShip
+public class Prospect : Ship
 {
     public const int FirstCycleHarvestVolume = 75;
 

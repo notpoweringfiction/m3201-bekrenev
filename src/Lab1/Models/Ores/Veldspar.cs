@@ -1,9 +1,8 @@
 namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Ores;
 
-public record Veldspar : IOre
+public record Veldspar : Ore
 {
-    public Veldspar(decimal oreVolume) : base(
-        volume: oreVolume,
+    public Veldspar() : base(
         volumePerUnit: 0.1m,
         refinementMineralsList: new Dictionary<Type, decimal>
         {

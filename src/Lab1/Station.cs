@@ -1,4 +1,4 @@
-using OreDataPack = Itmo.ObjectOrientedProgramming.Lab1.PairDataPack<Itmo.ObjectOrientedProgramming.Lab1.IOre, decimal>;
+using OreDataPack = Itmo.ObjectOrientedProgramming.Lab1.PairDataPack<Itmo.ObjectOrientedProgramming.Lab1.Ore, decimal>;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1;
 

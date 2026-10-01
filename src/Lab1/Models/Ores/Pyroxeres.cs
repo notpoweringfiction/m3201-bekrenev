@@ -1,9 +1,8 @@
 namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Ores;
 
-public record Pyroxeres : IOre
+public record Pyroxeres : Ore
 {
-    public Pyroxeres(decimal oreVolume) : base(
-        volume: oreVolume,
+    public Pyroxeres() : base(
         volumePerUnit: 0.3m,
         refinementMineralsList: new Dictionary<Type, decimal>
         {

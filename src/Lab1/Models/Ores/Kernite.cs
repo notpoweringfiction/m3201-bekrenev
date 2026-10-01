@@ -1,9 +1,8 @@
 namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Ores;
 
-public record Kernite : IOre
+public record Kernite : Ore
 {
-    public Kernite(decimal oreVolume) : base(
-        volume: oreVolume,
+    public Kernite() : base(
         volumePerUnit: 1.2m,
         refinementMineralsList: new Dictionary<Type, decimal>
         {

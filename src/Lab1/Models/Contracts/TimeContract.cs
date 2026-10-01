@@ -1,6 +1,6 @@
 namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Contracts;
 
-public class TimeContract : IContract
+public class TimeContract : Contract
 {
     public int ContractTime { get; init; }
 
@@ -9,7 +9,7 @@ public class TimeContract : IContract
     private int HarvestCycle(int cycleIndex)
     {
         int totalMinedOre = 0;
-        foreach (IShip ship in ContractFleet.Ships)
+        foreach (Ship ship in ContractFleet.Ships)
         {
             int curMined = ship.SimulateHarvestCycle(cycleIndex);
             if (!ContractFleet.Strategy.TryStoringOre(curMined, ship, ContractFleet.Ships)) continue;
@@ -30,14 +30,12 @@ public class TimeContract : IContract
         ValidationResults = ValidationResults.Success ? valid : ValidationResults;
     }
 
-    public override ExecutionResults ExecuteContract()
+    public override ContractResults ExecuteContract()
     {
         if (!ValidationResults.Success)
         {
-            return new ExecutionResults(
-                Success: false,
-                ErrorMessage: ValidationResults.ErrorMessage,
-                Results: null);
+            return new ContractFailure(
+                ErrorMessage: ValidationResults?.ErrorMessage ?? "Unknown error");
         }
 
         int totalHarvestedOre = 0;
@@ -54,7 +52,7 @@ public class TimeContract : IContract
             timeLeft -= totalTripTime;
             int curCycleHarvest = HarvestCycle(curCycle);
             if (totalHarvestedOre > 0) timeLeft--;
-            ContractStation.ProcessOres(new PairDataPack<IOre, decimal>(TargetAsteroidBelt.BeltOre, curCycleHarvest));
+            ContractStation.ProcessOres(new PairDataPack<Ore, decimal>(TargetAsteroidBelt.BeltOre, curCycleHarvest));
             Station.SaleReport mineralSaleReport = ContractStation.SellMinerals(PriceList);
             totalRevenue += mineralSaleReport.TotalRevenue;
             taxes += mineralSaleReport.Taxes;
@@ -63,18 +61,15 @@ public class TimeContract : IContract
             curCycle++;
         }
 
-        return new ExecutionResults(
-            Success: true,
-            ErrorMessage: null,
-            Results: new ContractResults(
-                WorkTime: ContractTime - timeLeft,
-                HarvestCyclesAmount: curCycle--,
-                TotalHarvestedVolume: totalHarvestedOre,
-                StoragedMinerals: new Dictionary<Type, int>(),
-                TotalRevenue: totalRevenue,
-                TotalRent: (ContractTime - timeLeft) * ContractFleet.UpkeerPerTimeUnit,
-                TaxesAmount: taxes,
-                NetProfit: netProfit));
+        return new ContractSuccess(
+            WorkTime: ContractTime - timeLeft,
+            HarvestCyclesAmount: curCycle--,
+            TotalHarvestedVolume: totalHarvestedOre,
+            StoragedMinerals: new Dictionary<Type, int>(),
+            TotalRevenue: totalRevenue,
+            TotalRent: (ContractTime - timeLeft) * ContractFleet.UpkeerPerTimeUnit,
+            TaxesAmount: taxes,
+            NetProfit: netProfit);
     }
 
     private ValidationInfo ValidateContract()

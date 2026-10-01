@@ -1,6 +1,6 @@
 namespace Itmo.ObjectOrientedProgramming.Lab1;
 
-public abstract class IShip
+public abstract class Ship
 {
     public CargoModule CargoHold { get; }
 
@@ -8,7 +8,7 @@ public abstract class IShip
 
     public int RentRate { get; init; }
 
-    protected IShip(int maxCargoHold, int maxSpeed, int rentRate)
+    protected Ship(int maxCargoHold, int maxSpeed, int rentRate)
     {
         if (maxSpeed < 0)
         {

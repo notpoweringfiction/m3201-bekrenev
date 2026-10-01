@@ -2,15 +2,15 @@ namespace Itmo.ObjectOrientedProgramming.Lab1;
 
 public class Fleet
 {
-    public IReadOnlyCollection<IShip> Ships { get; init; }
+    public IReadOnlyCollection<Ship> Ships { get; init; }
 
-    public IStrategy Strategy { get; init; }
+    public Strategy Strategy { get; init; }
 
     public int Speed { get; init; }
 
     public int UpkeerPerTimeUnit { get; init; }
 
-    public Fleet(IReadOnlyCollection<IShip> shipsList, IStrategy fleetStrategy)
+    public Fleet(IReadOnlyCollection<Ship> shipsList, Strategy fleetStrategy)
     {
         if (shipsList.Count == 0)
         {
@@ -19,7 +19,7 @@ public class Fleet
 
         int maxShipSpeed = 0;
         int totalUpkeep = 0;
-        foreach (IShip ship in shipsList)
+        foreach (Ship ship in shipsList)
         {
             maxShipSpeed = Math.Min(maxShipSpeed, ship.Speed);
             totalUpkeep += ship.RentRate;
@@ -32,7 +32,7 @@ public class Fleet
 
     public bool CanMineFirstCycle()
     {
-        foreach (IShip curShip in Ships)
+        foreach (Ship curShip in Ships)
         {
             if (curShip.SimulateHarvestCycle(1) > 0)
             {

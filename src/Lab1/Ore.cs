@@ -1,18 +1,16 @@
 namespace Itmo.ObjectOrientedProgramming.Lab1;
 
-public abstract record class IOre
+public abstract record Ore
 {
     public IReadOnlyDictionary<Type, decimal> RefineOutputList { get; init; }
 
-    public decimal Volume { get; init; }
-
     public decimal VolumePerUnit { get; init; }
 
-    protected IOre(decimal volume, decimal volumePerUnit, IReadOnlyDictionary<Type, decimal> refinementMineralsList)
+    protected Ore(decimal volumePerUnit, IReadOnlyDictionary<Type, decimal> refinementMineralsList)
     {
-        if (volume < 0 || volumePerUnit < 0)
+        if (volumePerUnit < 0)
         {
-            throw new ArgumentException("Negative volume or volume per point");
+            throw new ArgumentException("Negative volume per point");
         }
 
         Dictionary<Type, decimal> mineralDict = new();
@@ -30,7 +28,6 @@ public abstract record class IOre
             }
         }
 
-        Volume = volume;
         VolumePerUnit = volumePerUnit;
 
         RefineOutputList = mineralDict;

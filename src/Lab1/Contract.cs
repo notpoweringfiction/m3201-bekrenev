@@ -1,16 +1,10 @@
 namespace Itmo.ObjectOrientedProgramming.Lab1;
 
-public abstract class IContract
+public abstract class Contract
 {
-    public record ExecutionResults
-    (
-        bool Success,
-        string? ErrorMessage,
-        ContractResults? Results)
-    {
-    }
+    public abstract record ContractResults;
 
-    public record ContractResults
+    public record ContractSuccess
     (
         int WorkTime,
         int HarvestCyclesAmount,
@@ -19,9 +13,10 @@ public abstract class IContract
         decimal TotalRevenue,
         decimal TotalRent,
         decimal TaxesAmount,
-        decimal NetProfit)
-    {
-    }
+        decimal NetProfit) : ContractResults;
+
+    public record ContractFailure
+    (string ErrorMessage) : ContractResults;
 
     public AsteroidBelt TargetAsteroidBelt { get; init; }
 
@@ -33,7 +28,7 @@ public abstract class IContract
 
     public ValidationInfo ValidationResults { get; init; }
 
-    protected IContract(AsteroidBelt selectedBelt, Fleet selectedFleet, MineralPriceData givenPriceData, Station contractStation)
+    protected Contract(AsteroidBelt selectedBelt, Fleet selectedFleet, MineralPriceData givenPriceData, Station contractStation)
     {
         PriceList = givenPriceData;
         TargetAsteroidBelt = selectedBelt;
@@ -42,13 +37,11 @@ public abstract class IContract
         ValidationResults = ValidateContract();
     }
 
-    public abstract ExecutionResults ExecuteContract();
+    public abstract ContractResults ExecuteContract();
 
     public record ValidationInfo(
         bool Success,
-        string? ErrorMessage)
-    {
-    }
+        string? ErrorMessage);
 
     private ValidationInfo ValidateContract()
     {

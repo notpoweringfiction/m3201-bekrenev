@@ -1,9 +1,8 @@
 namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Ores;
 
-public record Scordite : IOre
+public record Scordite : Ore
 {
-    public Scordite(decimal oreVolume) : base(
-        volume: oreVolume,
+    public Scordite() : base(
         volumePerUnit: 0.15m,
         refinementMineralsList: new Dictionary<Type, decimal>
         {

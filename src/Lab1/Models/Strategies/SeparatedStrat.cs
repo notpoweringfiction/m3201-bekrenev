@@ -1,8 +1,8 @@
 namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Strategies;
 
-public class SeparatedStrat : IStrategy
+public class SeparatedStrat : Strategy
 {
-    public override bool TryStoringOre(int oreToStore, IShip curShip, IReadOnlyCollection<IShip> shipsList)
+    public override bool TryStoringOre(int oreToStore, Ship curShip, IReadOnlyCollection<Ship> shipsList)
     {
         if (!CanStoreOre(oreToStore, curShip, shipsList)) return false;
 
@@ -10,7 +10,7 @@ public class SeparatedStrat : IStrategy
         return true;
     }
 
-    private bool CanStoreOre(int oreToStore, IShip curShip, IReadOnlyCollection<IShip> shipsList)
+    private bool CanStoreOre(int oreToStore, Ship curShip, IReadOnlyCollection<Ship> shipsList)
     {
         int oreLeftToStore = oreToStore;
 
