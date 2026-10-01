@@ -1,12 +1,12 @@
-using OreDataPack = Itmo.ObjectOrientedProgramming.Lab1.PairDataPack<Itmo.ObjectOrientedProgramming.Lab1.Ore, decimal>;
+using MutableOrePair = Itmo.ObjectOrientedProgramming.Lab1.MutablePairPack<Itmo.ObjectOrientedProgramming.Lab1.Ore, int>;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1;
 
 public class Station
 {
-    private decimal TaxRate { get; init; }
+    public IDictionary<Type, MutableOrePair> OreStorage { get; private set; }
 
-    private Dictionary<Type, int> MineralStorage { get; } = new Dictionary<Type, int>();
+    private decimal TaxRate { get; init; }
 
     public record SaleReport
     {
@@ -27,27 +27,29 @@ public class Station
     public Station(decimal taxRate)
     {
         TaxRate = taxRate;
+        OreStorage = new Dictionary<Type, MutableOrePair>();
     }
 
-    public void ProcessOres(OreDataPack oreInput)
+    public void ProcessOres(Type oreType, MutableOrePair oreInput)
     {
-        foreach (KeyValuePair<Type, decimal> mineralPair in oreInput.First.RefineOutputList)
-        {
-            int totalMineralAmount = (int)(mineralPair.Value * oreInput.Second * oreInput.First.VolumePerUnit);
-            MineralStorage.TryAdd(mineralPair.Key, 0);
-            MineralStorage[mineralPair.Key] += totalMineralAmount;
-        }
+        OreStorage.TryAdd(oreType, new MutableOrePair(oreInput.First, oreInput.Second));
+        OreStorage[oreType].Second += (int)(oreInput.Second * oreInput.First.VolumePerUnit);
     }
 
     public SaleReport SellMinerals(MineralPriceData priceList)
     {
         int total_revenue = 0;
 
-        foreach (KeyValuePair<Type, int> pair in MineralStorage)
+        foreach (KeyValuePair<Type, MutableOrePair> pair in OreStorage)
         {
-            int portionAmount = pair.Value / 100;
-            MineralStorage[pair.Key] -= portionAmount * 100;
-            total_revenue += priceList.PriceList[pair.Key] * portionAmount;
+            int portionAmount = pair.Value.Second / 100;
+
+            foreach (KeyValuePair<Type, decimal> mineralPair in pair.Value.First.RefineOutputList)
+            {
+                total_revenue += priceList.PriceList[mineralPair.Key] * portionAmount;
+            }
+
+            pair.Value.Second -= portionAmount * 100;
         }
 
         return new SaleReport(total_revenue * (1 - TaxRate), total_revenue, total_revenue * TaxRate);

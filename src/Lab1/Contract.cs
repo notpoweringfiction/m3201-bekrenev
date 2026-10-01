@@ -76,7 +76,7 @@ public abstract class Contract
             int curVoyageHarvest = StartHarvestCycle();
             UpdateStateAfterHarvest(curVoyageHarvest);
 
-            ContractStation.ProcessOres(new PairDataPack<Ore, decimal>(TargetAsteroidBelt.BeltOre, curVoyageHarvest));
+            ContractStation.ProcessOres(TargetAsteroidBelt.BeltOreType, new PairDataPack<Ore, decimal>(TargetAsteroidBelt.BeltOre, curVoyageHarvest));
             Station.SaleReport mineralSaleReport = ContractStation.SellMinerals(PriceList);
 
             totalRevenue += mineralSaleReport.TotalRevenue;
