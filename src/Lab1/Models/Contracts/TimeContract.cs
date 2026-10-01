@@ -9,9 +9,15 @@ public class TimeContract : Contract
     {
         ContractTime = contractTime;
 
-        ValidationInfo valid = ValidateContract();
+        ValidationInfo validation = ValidateContract();
 
-        ValidationStatus = ValidationStatus.Success ? valid : ValidationStatus;
+        ValidationStatus = ValidationStatus switch
+        {
+            ValidationInfo.ContractValid valid => validation,
+            ValidationInfo.ContractInvalid invalid => invalid,
+            _ => new ValidationInfo.ContractInvalid(
+                ErrorMessage: "Unknown error"),
+        };
     }
 
     protected override void UpdateStateBeforeHarvest()
@@ -34,12 +40,9 @@ public class TimeContract : Contract
     {
         return (TimeToField * 2) + 2 <= ContractTime
         ?
-            new ValidationInfo(
-                Success: true,
-                ErrorMessage: null)
+            new ValidationInfo.ContractValid()
         :
-            new ValidationInfo(
-                Success: false,
+            new ValidationInfo.ContractInvalid(
                 ErrorMessage: "Contract time too short");
     }
 }

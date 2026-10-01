@@ -26,6 +26,13 @@ public abstract class Contract
 
     public Station ContractStation { get; }
 
+    public record ValidationInfo()
+    {
+        public record ContractValid() : ValidationInfo;
+
+        public record ContractInvalid(string ErrorMessage) : ValidationInfo;
+    }
+
     public ValidationInfo ValidationStatus { get; init; }
 
     public int TimeToField { get; init; }
@@ -44,10 +51,16 @@ public abstract class Contract
 
     public ContractResults ExecuteContract()
     {
-        if (!ValidationStatus.Success)
+        switch (ValidationStatus)
         {
-            return new ContractFailure(
-                ErrorMessage: ValidationStatus?.ErrorMessage ?? "Unknown error");
+            case ValidationInfo.ContractValid valid:
+                break;
+            case ValidationInfo.ContractInvalid invalid:
+                return new ContractFailure(
+                    ErrorMessage: invalid.ErrorMessage);
+            default:
+                return new ContractFailure(
+                    ErrorMessage: "Unknown error");
         }
 
         int totalHarvestedOre = 0;
@@ -86,10 +99,6 @@ public abstract class Contract
             NetProfit: netProfit);
     }
 
-    public record ValidationInfo(
-        bool Success,
-        string? ErrorMessage);
-
     protected abstract bool CanStartVoyage();
 
     protected int StartHarvestCycle()
@@ -125,8 +134,7 @@ public abstract class Contract
     {
         if (!ContractFleet.CanMineFirstCycle())
         {
-            return new ValidationInfo(
-                Success: false,
+            return new ValidationInfo.ContractInvalid(
                 ErrorMessage: "Fleet can't mine first cycle");
         }
 
@@ -134,14 +142,11 @@ public abstract class Contract
         {
             if (!PriceList.PriceList.ContainsKey(mineralOutput.Key))
             {
-                return new ValidationInfo(
-                    Success: false,
+                return new ValidationInfo.ContractInvalid(
                     ErrorMessage: mineralOutput.Key.ToString() + " absent in price list");
             }
         }
 
-        return new ValidationInfo(
-                Success: true,
-                ErrorMessage: null);
+        return new ValidationInfo.ContractValid();
     }
 }
