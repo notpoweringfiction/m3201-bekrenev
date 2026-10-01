@@ -4,72 +4,30 @@ public class TimeContract : Contract
 {
     public int ContractTime { get; init; }
 
-    private int TimeToField { get; init; }
-
-    private int HarvestCycle(int cycleIndex)
-    {
-        int totalMinedOre = 0;
-        foreach (Ship ship in ContractFleet.Ships)
-        {
-            int curMined = ship.SimulateHarvestCycle(cycleIndex);
-            if (!ContractFleet.Strategy.TryStoringOre(curMined, ship, ContractFleet.Ships)) continue;
-            totalMinedOre += curMined;
-        }
-
-        return totalMinedOre;
-    }
-
     public TimeContract(AsteroidBelt selectedBelt, Fleet selectedFleet, MineralPriceData givenPriceList, Station contractStation, int contractTime)
         : base(selectedBelt, selectedFleet, givenPriceList, contractStation)
     {
-        TimeToField = selectedBelt.Distance / selectedFleet.Speed;
         ContractTime = contractTime;
 
         ValidationInfo valid = ValidateContract();
 
-        ValidationResults = ValidationResults.Success ? valid : ValidationResults;
+        ValidationStatus = ValidationStatus.Success ? valid : ValidationStatus;
     }
 
-    public override ContractResults ExecuteContract()
+    protected override void UpdateStateBeforeHarvest()
     {
-        if (!ValidationResults.Success)
-        {
-            return new ContractFailure(
-                ErrorMessage: ValidationResults?.ErrorMessage ?? "Unknown error");
-        }
+        TotalWorkTime += TimeToField;
+    }
 
-        int totalHarvestedOre = 0;
-        int timeLeft = ContractTime;
-        int totalTripTime = (TimeToField * 2) + 1;
-        int curCycle = 0;
+    protected override void UpdateStateAfterHarvest(int cycleHarvest)
+    {
+        if (cycleHarvest > 0) TotalWorkTime++;
+        TotalWorkTime += TimeToField;
+    }
 
-        decimal totalRevenue = 0;
-        decimal taxes = 0;
-        decimal netProfit = 0;
-
-        while (totalTripTime <= timeLeft)
-        {
-            timeLeft -= totalTripTime;
-            int curCycleHarvest = HarvestCycle(curCycle);
-            if (totalHarvestedOre > 0) timeLeft--;
-            ContractStation.ProcessOres(new PairDataPack<Ore, decimal>(TargetAsteroidBelt.BeltOre, curCycleHarvest));
-            Station.SaleReport mineralSaleReport = ContractStation.SellMinerals(PriceList);
-            totalRevenue += mineralSaleReport.TotalRevenue;
-            taxes += mineralSaleReport.Taxes;
-            netProfit += mineralSaleReport.NetProfit;
-            ContractFleet.Strategy.ClearStorages(ContractFleet.Ships);
-            curCycle++;
-        }
-
-        return new ContractSuccess(
-            WorkTime: ContractTime - timeLeft,
-            HarvestCyclesAmount: curCycle--,
-            TotalHarvestedVolume: totalHarvestedOre,
-            StoragedMinerals: new Dictionary<Type, int>(),
-            TotalRevenue: totalRevenue,
-            TotalRent: (ContractTime - timeLeft) * ContractFleet.UpkeerPerTimeUnit,
-            TaxesAmount: taxes,
-            NetProfit: netProfit);
+    protected override bool CanStartVoyage()
+    {
+        return TotalWorkTime + (2 * TimeToField) + 1 <= ContractTime;
     }
 
     private ValidationInfo ValidateContract()

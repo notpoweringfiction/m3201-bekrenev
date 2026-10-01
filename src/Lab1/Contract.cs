@@ -26,7 +26,9 @@ public abstract class Contract
 
     public Station ContractStation { get; }
 
-    public ValidationInfo ValidationResults { get; init; }
+    public ValidationInfo ValidationStatus { get; init; }
+
+    public int TimeToField { get; init; }
 
     protected Contract(AsteroidBelt selectedBelt, Fleet selectedFleet, MineralPriceData givenPriceData, Station contractStation)
     {
@@ -34,14 +36,88 @@ public abstract class Contract
         TargetAsteroidBelt = selectedBelt;
         ContractFleet = selectedFleet;
         ContractStation = contractStation;
-        ValidationResults = ValidateContract();
+        ValidationStatus = ValidateContract();
+
+        TimeToField = selectedBelt.Distance / selectedFleet.Speed;
+        TotalWorkTime = 0;
     }
 
-    public abstract ContractResults ExecuteContract();
+    public ContractResults ExecuteContract()
+    {
+        if (!ValidationStatus.Success)
+        {
+            return new ContractFailure(
+                ErrorMessage: ValidationStatus?.ErrorMessage ?? "Unknown error");
+        }
+
+        int totalHarvestedOre = 0;
+        int curCycle = 0;
+
+        decimal totalRevenue = 0;
+        decimal taxes = 0;
+        decimal netProfit = 0;
+
+        while (CanStartVoyage())
+        {
+            UpdateStateBeforeHarvest();
+            int curCycleHarvest = HarvestCycle(curCycle);
+            UpdateStateAfterHarvest(curCycleHarvest);
+
+            ContractStation.ProcessOres(new PairDataPack<Ore, decimal>(TargetAsteroidBelt.BeltOre, curCycleHarvest));
+            Station.SaleReport mineralSaleReport = ContractStation.SellMinerals(PriceList);
+
+            totalRevenue += mineralSaleReport.TotalRevenue;
+            taxes += mineralSaleReport.Taxes;
+            netProfit += mineralSaleReport.NetProfit;
+
+            ContractFleet.Strategy.ClearStorages(ContractFleet.Ships);
+
+            curCycle++;
+        }
+
+        return new ContractSuccess(
+            WorkTime: TotalWorkTime,
+            HarvestCyclesAmount: curCycle--,
+            TotalHarvestedVolume: totalHarvestedOre,
+            StoragedMinerals: new Dictionary<Type, int>(),
+            TotalRevenue: totalRevenue,
+            TotalRent: TotalWorkTime * ContractFleet.UpkeerPerTimeUnit,
+            TaxesAmount: taxes,
+            NetProfit: netProfit);
+    }
 
     public record ValidationInfo(
         bool Success,
         string? ErrorMessage);
+
+    protected abstract bool CanStartVoyage();
+
+    protected int HarvestCycle(int cycleIndex)
+    {
+        int totalMinedOre = 0;
+
+        while (true)
+        {
+            int cycleMined = 0;
+            foreach (Ship ship in ContractFleet.Ships)
+            {
+                int curMined = ship.SimulateHarvestCycle(cycleIndex);
+                if (!ContractFleet.Strategy.TryStoringOre(curMined, ship, ContractFleet.Ships)) continue;
+                cycleMined += curMined;
+            }
+
+            if (cycleMined == 0) break;
+            totalMinedOre += cycleMined;
+        }
+
+        return totalMinedOre;
+    }
+
+    protected abstract void UpdateStateBeforeHarvest();
+
+    protected abstract void UpdateStateAfterHarvest(int cycleHarvest);
+
+    protected int TotalWorkTime { get; set; }
 
     private ValidationInfo ValidateContract()
     {
