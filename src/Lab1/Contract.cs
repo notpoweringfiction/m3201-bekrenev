@@ -51,7 +51,7 @@ public abstract class Contract
         }
 
         int totalHarvestedOre = 0;
-        int curCycle = 0;
+        int curVoyage = 0;
 
         decimal totalRevenue = 0;
         decimal taxes = 0;
@@ -60,10 +60,10 @@ public abstract class Contract
         while (CanStartVoyage())
         {
             UpdateStateBeforeHarvest();
-            int curCycleHarvest = HarvestCycle(curCycle);
-            UpdateStateAfterHarvest(curCycleHarvest);
+            int curVoyageHarvest = StartHarvestCycle();
+            UpdateStateAfterHarvest(curVoyageHarvest);
 
-            ContractStation.ProcessOres(new PairDataPack<Ore, decimal>(TargetAsteroidBelt.BeltOre, curCycleHarvest));
+            ContractStation.ProcessOres(new PairDataPack<Ore, decimal>(TargetAsteroidBelt.BeltOre, curVoyageHarvest));
             Station.SaleReport mineralSaleReport = ContractStation.SellMinerals(PriceList);
 
             totalRevenue += mineralSaleReport.TotalRevenue;
@@ -72,12 +72,12 @@ public abstract class Contract
 
             ContractFleet.Strategy.ClearStorages(ContractFleet.Ships);
 
-            curCycle++;
+            curVoyage++;
         }
 
         return new ContractSuccess(
             WorkTime: TotalWorkTime,
-            HarvestCyclesAmount: curCycle--,
+            HarvestCyclesAmount: curVoyage,
             TotalHarvestedVolume: totalHarvestedOre,
             StoragedMinerals: new Dictionary<Type, int>(),
             TotalRevenue: totalRevenue,
@@ -92,22 +92,24 @@ public abstract class Contract
 
     protected abstract bool CanStartVoyage();
 
-    protected int HarvestCycle(int cycleIndex)
+    protected int StartHarvestCycle()
     {
         int totalMinedOre = 0;
+        int curHarvestCycle = 0;
 
         while (true)
         {
             int cycleMined = 0;
             foreach (Ship ship in ContractFleet.Ships)
             {
-                int curMined = ship.SimulateHarvestCycle(cycleIndex);
+                int curMined = ship.SimulateHarvestCycle(curHarvestCycle);
                 if (!ContractFleet.Strategy.TryStoringOre(curMined, ship, ContractFleet.Ships)) continue;
                 cycleMined += curMined;
             }
 
             if (cycleMined == 0) break;
             totalMinedOre += cycleMined;
+            curHarvestCycle++;
         }
 
         return totalMinedOre;

@@ -10,7 +10,7 @@ public class MineralPriceData
 
         foreach (KeyValuePair<Type, int> pair in newPriceList)
         {
-            if (!pair.Key.IsAssignableTo(typeof(IMineral)) || pair.Value < 0)
+            if (!pair.Key.IsAssignableTo(typeof(Mineral)) || pair.Value < 0)
             {
                 Console.Error.WriteLine("Entry with type " + pair.Key.ToString() + " in price list skipped due to negative price or type not inherited from IMineral");
                 continue;
