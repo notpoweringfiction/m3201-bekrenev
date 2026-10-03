@@ -4,9 +4,9 @@ public record Veldspar : Ore
 {
     public Veldspar() : base(
         volumePerUnit: 0.1m,
-        refinementMineralsList: new Dictionary<Type, decimal>
+        refinementMineralsList: new Dictionary<Type, int>
         {
-            [typeof(Minerals.Tritanium)] = 200m,
+            [typeof(Minerals.Tritanium)] = 200,
         })
     {
     }

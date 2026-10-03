@@ -4,10 +4,10 @@ public record Scordite : Ore
 {
     public Scordite() : base(
         volumePerUnit: 0.15m,
-        refinementMineralsList: new Dictionary<Type, decimal>
+        refinementMineralsList: new Dictionary<Type, int>
         {
-            [typeof(Minerals.Tritanium)] = 75m,
-            [typeof(Minerals.Pyerite)] = 55m,
+            [typeof(Minerals.Tritanium)] = 75,
+            [typeof(Minerals.Pyerite)] = 55,
         })
     {
     }

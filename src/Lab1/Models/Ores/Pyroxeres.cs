@@ -4,10 +4,10 @@ public record Pyroxeres : Ore
 {
     public Pyroxeres() : base(
         volumePerUnit: 0.3m,
-        refinementMineralsList: new Dictionary<Type, decimal>
+        refinementMineralsList: new Dictionary<Type, int>
         {
-            [typeof(Minerals.Pyerite)] = 45m,
-            [typeof(Minerals.Mexallon)] = 15m,
+            [typeof(Minerals.Pyerite)] = 45,
+            [typeof(Minerals.Mexallon)] = 15,
         })
     {
     }
