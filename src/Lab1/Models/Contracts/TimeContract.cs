@@ -23,7 +23,6 @@ public class TimeContract : Contract
     protected override void UpdateStateBeforeVoyage()
     {
         TotalWorkTime += TimeToField;
-        Console.WriteLine("Flew to the field, total: " + TotalWorkTime.ToString());
     }
 
     protected override void UpdateStateAfterHarvestCycle(int cycleHarvest)
@@ -35,11 +34,9 @@ public class TimeContract : Contract
         if (voyageHarvest > 0)
         {
             ++TotalWorkTime;
-            Console.WriteLine("worked, total " + TotalWorkTime.ToString());
         }
 
         TotalWorkTime += TimeToField;
-        Console.WriteLine("Flew from the field, total: " + TotalWorkTime.ToString());
     }
 
     protected override bool CanStartVoyage()

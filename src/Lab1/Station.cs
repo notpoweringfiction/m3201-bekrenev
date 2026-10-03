@@ -25,7 +25,6 @@ public class Station
     {
         OreStorage.TryAdd(oreType, new MutableOrePair(oreInput.First, 0));
         OreStorage[oreType].Second += (int)(oreInput.Second / oreInput.First.VolumePerUnit);
-        Console.WriteLine("stored " + oreInput.Second.ToString() + " m^3 thus: " + (oreInput.Second / oreInput.First.VolumePerUnit).ToString());
     }
 
     public SaleReport SellMinerals(MineralPriceData priceList)
@@ -38,13 +37,10 @@ public class Station
         {
             int portionAmount = pair.Value.Second / 100;
 
-            Console.WriteLine(pair.Value.Second);
-
             foreach (KeyValuePair<Type, int> mineralPair in pair.Value.First.RefineOutputList)
             {
                 totalRevenue += priceList.PriceList[mineralPair.Key] * portionAmount * mineralPair.Value;
                 soldMinerals.TryAdd(mineralPair.Key, 0);
-                Console.WriteLine("sold " + mineralPair.Key.ToString() + ' ' + (portionAmount * mineralPair.Value).ToString() + " for " + priceList.PriceList[mineralPair.Key].ToString() + " each");
                 soldMinerals[mineralPair.Key] += portionAmount * mineralPair.Value;
             }
 

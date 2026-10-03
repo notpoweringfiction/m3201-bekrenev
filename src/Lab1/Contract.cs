@@ -73,8 +73,6 @@ public abstract class Contract
 
         Dictionary<Type, int> soldMinerals = new();
 
-        Console.WriteLine(CanStartVoyage().ToString());
-
         while (CanStartVoyage())
         {
             UpdateStateBeforeVoyage();
@@ -137,8 +135,6 @@ public abstract class Contract
                 if (!ContractFleet.Strategy.TryStoringOre(curMined, ship, ContractFleet.Ships)) continue;
                 cycleMined += curMined;
             }
-
-            Console.WriteLine("mined from cycle[" + curHarvestCycle.ToString() + "]: " + cycleMined);
 
             if (cycleMined == 0) break;
             UpdateStateAfterHarvestCycle(cycleMined);
