@@ -14,6 +14,7 @@ public class CargoModule
         }
 
         MaxCargoStorage = maxCargoHold;
+        StorageLeft = maxCargoHold;
     }
 
     public int StoreCargo(int cargoAmount)

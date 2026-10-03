@@ -17,7 +17,7 @@ public class Fleet
             throw new ArgumentException("No ships in fleet");
         }
 
-        int maxShipSpeed = 0;
+        int maxShipSpeed = int.MaxValue;
         int totalUpkeep = 0;
         foreach (Ship ship in shipsList)
         {
@@ -25,6 +25,7 @@ public class Fleet
             totalUpkeep += ship.RentRate;
         }
 
+        UpkeerPerTimeUnit = totalUpkeep;
         Speed = maxShipSpeed;
         Ships = shipsList;
         Strategy = fleetStrategy;

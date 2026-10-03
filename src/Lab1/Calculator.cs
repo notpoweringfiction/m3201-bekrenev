@@ -7,13 +7,14 @@ public class Calculator
 {
     public record CalculationResult
     {
-        public record Success(Contract.ContractResults Results) : CalculationResult
-        {
-        }
+    }
 
-        public record Failure(string ErrorMessage) : CalculationResult
-        {
-        }
+    public record CalculationSuccess(Contract.ContractResults Results) : CalculationResult
+    {
+    }
+
+    public record CalculationFailure(ContractError Error) : CalculationResult
+    {
     }
 
     public CalculationResult Calculate(Contract contract)
@@ -22,11 +23,11 @@ public class Calculator
 
         return results switch
         {
-            Contract.ContractSuccess success => new CalculationResult.Success(success),
+            Contract.ContractSuccess success => new CalculationSuccess(success),
 
-            Contract.ContractFailure failure => new CalculationResult.Failure(failure.ErrorMessage),
+            Contract.ContractFailure failure => new CalculationFailure(failure.Error),
 
-            _ => new CalculationResult.Failure("Unknown contract output"),
+            _ => new CalculationFailure(new UnknownError("Unknown contract output")),
         };
     }
 }

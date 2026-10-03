@@ -21,6 +21,9 @@ public class SharedStrat : Strategy
 
         foreach (Ship ship in shipsList)
         {
+            Console.WriteLine("left to store: " + oreLeftToStore.ToString());
+            Console.WriteLine("available: " + ship.CargoHold.StorageLeft);
+
             oreLeftToStore = Math.Max(oreLeftToStore - ship.CargoHold.StorageLeft, 0);
         }
 

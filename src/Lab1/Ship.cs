@@ -22,6 +22,7 @@ public abstract class Ship
 
         CargoHold = new CargoModule(maxCargoHold);
         Speed = maxSpeed;
+        RentRate = rentRate;
     }
 
     public abstract int SimulateHarvestCycle(int simCycle);

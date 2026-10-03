@@ -1,4 +1,5 @@
 using MutableOrePair = Itmo.ObjectOrientedProgramming.Lab1.MutablePairPack<Itmo.ObjectOrientedProgramming.Lab1.Ore, int>;
+using OreDataPair = Itmo.ObjectOrientedProgramming.Lab1.PairDataPack<Itmo.ObjectOrientedProgramming.Lab1.Ore, int>;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1;
 
@@ -8,21 +9,11 @@ public class Station
 
     private decimal TaxRate { get; init; }
 
-    public record SaleReport
-    {
-        public decimal NetProfit { get; init; }
-
-        public decimal TotalRevenue { get; init; }
-
-        public decimal Taxes { get; init; }
-
-        public SaleReport(decimal netProfit, decimal totalRevenue, decimal taxes)
-        {
-            NetProfit = netProfit;
-            TotalRevenue = totalRevenue;
-            Taxes = taxes;
-        }
-    }
+    public record SaleReport(
+        decimal NetProfit,
+        decimal TotalRevenue,
+        decimal Taxes,
+        IReadOnlyDictionary<Type, int> SoldMinerals);
 
     public Station(decimal taxRate)
     {
@@ -30,28 +21,41 @@ public class Station
         OreStorage = new Dictionary<Type, MutableOrePair>();
     }
 
-    public void ProcessOres(Type oreType, MutableOrePair oreInput)
+    public void ProcessOres(Type oreType, OreDataPair oreInput)
     {
-        OreStorage.TryAdd(oreType, new MutableOrePair(oreInput.First, oreInput.Second));
-        OreStorage[oreType].Second += (int)(oreInput.Second * oreInput.First.VolumePerUnit);
+        OreStorage.TryAdd(oreType, new MutableOrePair(oreInput.First, 0));
+        OreStorage[oreType].Second += (int)(oreInput.Second / oreInput.First.VolumePerUnit);
+        Console.WriteLine("stored " + oreInput.Second.ToString() + " m^3 thus: " + (oreInput.Second / oreInput.First.VolumePerUnit).ToString());
     }
 
     public SaleReport SellMinerals(MineralPriceData priceList)
     {
-        int total_revenue = 0;
+        int totalRevenue = 0;
+
+        Dictionary<Type, int> soldMinerals = new();
 
         foreach (KeyValuePair<Type, MutableOrePair> pair in OreStorage)
         {
             int portionAmount = pair.Value.Second / 100;
 
-            foreach (KeyValuePair<Type, decimal> mineralPair in pair.Value.First.RefineOutputList)
+            Console.WriteLine(pair.Value.Second);
+
+            foreach (KeyValuePair<Type, int> mineralPair in pair.Value.First.RefineOutputList)
             {
-                total_revenue += priceList.PriceList[mineralPair.Key] * portionAmount;
+                totalRevenue += priceList.PriceList[mineralPair.Key] * portionAmount * mineralPair.Value;
+                soldMinerals.TryAdd(mineralPair.Key, 0);
+                Console.WriteLine("sold " + mineralPair.Key.ToString() + ' ' + (portionAmount * mineralPair.Value).ToString() + " for " + priceList.PriceList[mineralPair.Key].ToString() + " each");
+                soldMinerals[mineralPair.Key] += portionAmount * mineralPair.Value;
             }
 
             pair.Value.Second -= portionAmount * 100;
         }
 
-        return new SaleReport(total_revenue * (1 - TaxRate), total_revenue, total_revenue * TaxRate);
+        return new SaleReport(totalRevenue * (1 - TaxRate), totalRevenue, totalRevenue * TaxRate, soldMinerals);
+    }
+
+    public void ClearStorage()
+    {
+        OreStorage.Clear();
     }
 }

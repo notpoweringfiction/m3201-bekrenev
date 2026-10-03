@@ -12,19 +12,36 @@ public class VolumeContract : Contract
         ContractVolume = contractVolume;
     }
 
-    protected override void UpdateStateBeforeHarvest()
+    protected override void UpdateStateBeforeVoyage()
     {
         TotalWorkTime += TimeToField;
+        Console.WriteLine("Flew to the field, total: " + TotalWorkTime.ToString());
     }
 
-    protected override void UpdateStateAfterHarvest(int cycleHarvest)
+    protected override void UpdateStateAfterHarvestCycle(int cycleHarvest)
     {
-        if (cycleHarvest > 0) TotalWorkTime++;
+        HarvestedVolume += cycleHarvest;
+    }
+
+    protected override void UpdateStateAfterVoyage(int voyageHarvest)
+    {
+        if (voyageHarvest > 0)
+        {
+            ++TotalWorkTime;
+            Console.WriteLine("worked, total " + TotalWorkTime.ToString());
+        }
+
         TotalWorkTime += TimeToField;
+        Console.WriteLine("Flew from the field, total: " + TotalWorkTime.ToString());
     }
 
     protected override bool CanStartVoyage()
     {
-        return HarvestedVolume > ContractVolume;
+        return HarvestedVolume < ContractVolume;
+    }
+
+    protected override bool CanStartHarvestCycle()
+    {
+        return HarvestedVolume < ContractVolume;
     }
 }
