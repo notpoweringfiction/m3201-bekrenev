@@ -29,7 +29,7 @@ public class ContractScenarioTests
 
     private readonly Calculator calculator;
 
-    private void CompareContractSuccessResults(Contract.ContractSuccess expectedResults, Contract.ContractSuccess actualResults)
+    private void CompareContractSuccessResults(Calculator.MappedContractResults expectedResults, Calculator.MappedContractResults actualResults)
     {
         Assert.Equal(
             expectedResults.WorkTime,
@@ -92,12 +92,12 @@ public class ContractScenarioTests
         // Assert: выполнен; 1 рейс, время работы 6 ч, добыто 400 м³;
         // Tritanium – 8000; выручка 32 000, аренда 6000, прибыль 26 000
         Assert.IsType<Calculator.CalculationSuccess>(result);
-        Assert.IsType<Contract.ContractSuccess>(((Calculator.CalculationSuccess)result).Results);
+        Assert.IsType<Calculator.MappedContractResults>(((Calculator.CalculationSuccess)result).Results);
 
-        var actualResults = (Contract.ContractSuccess)((Calculator.CalculationSuccess)result).Results;
+        Calculator.MappedContractResults actualResults = ((Calculator.CalculationSuccess)result).Results;
 
         var expectedResults =
-            new Contract.ContractSuccess(
+            new Calculator.MappedContractResults(
                 WorkTime: 6,
                 HarvestCyclesAmount: 1,
                 TotalHarvestedVolume: 400,
@@ -143,12 +143,12 @@ public class ContractScenarioTests
         // Assert: выполнен; 3 рейса (400, 400, 200 м³), время работы 16 ч;
         // Tritanium – 20 000; выручка 80 000, аренда 16 000, прибыль 64 000
         Assert.IsType<Calculator.CalculationSuccess>(result);
-        Assert.IsType<Contract.ContractSuccess>(((Calculator.CalculationSuccess)result).Results);
+        Assert.IsType<Calculator.MappedContractResults>(((Calculator.CalculationSuccess)result).Results);
 
-        var actualResults = (Contract.ContractSuccess)((Calculator.CalculationSuccess)result).Results;
+        Calculator.MappedContractResults actualResults = ((Calculator.CalculationSuccess)result).Results;
 
         var expectedResults =
-            new Contract.ContractSuccess(
+            new Calculator.MappedContractResults(
                 WorkTime: 16,
                 HarvestCyclesAmount: 3,
                 TotalHarvestedVolume: 1000,
