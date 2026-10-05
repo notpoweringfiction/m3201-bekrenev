@@ -5,11 +5,22 @@
 /// </summary>
 public class Calculator
 {
+    public record MappedContractResults(
+        int WorkTime,
+        int HarvestCyclesAmount,
+        decimal TotalHarvestedVolume,
+        IReadOnlyDictionary<Type, int> StoragedOre,
+        IReadOnlyDictionary<Type, int> SoldMinerals,
+        decimal TotalRevenue,
+        decimal TotalRent,
+        decimal TaxesAmount,
+        decimal NetProfit);
+
     public record CalculationResult
     {
     }
 
-    public record CalculationSuccess(Contract.ContractResults Results) : CalculationResult
+    public record CalculationSuccess(MappedContractResults Results) : CalculationResult
     {
     }
 
@@ -23,11 +34,25 @@ public class Calculator
 
         return results switch
         {
-            Contract.ContractSuccess success => new CalculationSuccess(success),
+            Contract.ContractSuccess success => new CalculationSuccess(MapContractResults(success)),
 
             Contract.ContractFailure failure => new CalculationFailure(failure.Error),
 
             _ => new CalculationFailure(new UnknownError("Unknown contract output")),
         };
+    }
+
+    private MappedContractResults MapContractResults(Contract.ContractSuccess unmappedResults)
+    {
+        return new(
+            WorkTime: unmappedResults.WorkTime,
+            HarvestCyclesAmount: unmappedResults.HarvestCyclesAmount,
+            TotalHarvestedVolume: unmappedResults.TotalHarvestedVolume,
+            StoragedOre: unmappedResults.StoragedOre,
+            SoldMinerals: unmappedResults.SoldMinerals,
+            TotalRevenue: unmappedResults.TotalRevenue,
+            TotalRent: unmappedResults.TotalRent,
+            TaxesAmount: unmappedResults.TaxesAmount,
+            NetProfit: unmappedResults.NetProfit);
     }
 }
