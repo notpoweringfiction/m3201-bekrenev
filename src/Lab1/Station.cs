@@ -17,6 +17,11 @@ public class Station
 
     public Station(decimal taxRate)
     {
+        if (taxRate <= 1 && taxRate >= 0)
+        {
+            throw new ArgumentException("Tax rate beyond [0, 1]");
+        }
+
         TaxRate = taxRate;
         OreStorage = new Dictionary<Type, MutableOrePair>();
     }

@@ -208,4 +208,13 @@ public class ContractScenarioTests
         Assert.IsType<Calculator.CalculationFailure>(result);
         Assert.IsType<PriceListError>(((Calculator.CalculationFailure)result).Error);
     }
+
+    [Fact(DisplayName = "Сценарий 6. Ставка вне [0,1]")]
+    public void Contract_WithOutOfBoundsTaxRate_CannotBeCreated()
+    {
+        // Arrange + Act: налог на станции вне [0,1]
+
+        // Assert: исключение
+        Assert.Throws<ArgumentException>(() => new Station(taxRate: 4));
+    }
 }
