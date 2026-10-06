@@ -1,3 +1,5 @@
+using Itmo.ObjectOrientedProgramming.Lab1.Utils;
+
 namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Strategies;
 
 public class SeparatedStrat : Strategy
@@ -6,7 +8,7 @@ public class SeparatedStrat : Strategy
     {
         if (!CanStoreOre(oreToStore, curShip, shipsList)) return false;
 
-        curShip.CargoHold.StoreCargo(oreToStore);
+        curShip.CargoHold.StoreCargo(new NonNegativeInt(oreToStore));
         return true;
     }
 

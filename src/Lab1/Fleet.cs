@@ -1,3 +1,5 @@
+using Itmo.ObjectOrientedProgramming.Lab1.Utils;
+
 namespace Itmo.ObjectOrientedProgramming.Lab1;
 
 public class Fleet
@@ -6,9 +8,9 @@ public class Fleet
 
     public Strategy Strategy { get; init; }
 
-    public int Speed { get; init; }
+    public SpeedValue Speed { get; init; }
 
-    public int UpkeerPerTimeUnit { get; init; }
+    public NonNegativeInt UpkeerPerTimeUnit { get; init; }
 
     public Fleet(IReadOnlyCollection<Ship> shipsList, Strategy fleetStrategy)
     {
@@ -21,12 +23,12 @@ public class Fleet
         int totalUpkeep = 0;
         foreach (Ship ship in shipsList)
         {
-            maxShipSpeed = Math.Min(maxShipSpeed, ship.Speed);
-            totalUpkeep += ship.RentRate;
+            maxShipSpeed = Math.Min(maxShipSpeed, ship.Speed.Value);
+            totalUpkeep += ship.RentRate.Value;
         }
 
-        UpkeerPerTimeUnit = totalUpkeep;
-        Speed = maxShipSpeed;
+        UpkeerPerTimeUnit = new NonNegativeInt(totalUpkeep);
+        Speed = new SpeedValue(maxShipSpeed);
         Ships = shipsList;
         Strategy = fleetStrategy;
     }

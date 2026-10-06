@@ -1,10 +1,12 @@
+using Itmo.ObjectOrientedProgramming.Lab1.Utils;
+
 namespace Itmo.ObjectOrientedProgramming.Lab1;
 
 public class Venture : Ship
 {
     public const int HarvestVolume = 100;
 
-    public Venture() : base(maxCargoHold: 400, maxSpeed: 4, rentRate: 1000)
+    public Venture() : base(new CargoModule(new NonNegativeInt(400)), new SpeedValue(4), new RentValue(1000))
     {
     }
 

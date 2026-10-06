@@ -1,3 +1,5 @@
+using Itmo.ObjectOrientedProgramming.Lab1.Utils;
+
 namespace Itmo.ObjectOrientedProgramming.Lab1;
 
 public class Prospect : Ship
@@ -6,7 +8,7 @@ public class Prospect : Ship
 
     public const int NormalHarvestVolume = 150;
 
-    public Prospect() : base(maxCargoHold: 1000, maxSpeed: 5, rentRate: 1500)
+    public Prospect() : base(new CargoModule(new NonNegativeInt(1000)), new SpeedValue(5), new RentValue(1500))
     {
     }
 

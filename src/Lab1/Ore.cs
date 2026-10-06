@@ -1,31 +1,20 @@
+using Itmo.ObjectOrientedProgramming.Lab1.Utils;
+
 namespace Itmo.ObjectOrientedProgramming.Lab1;
 
 public abstract record Ore
 {
-    public IReadOnlyDictionary<Type, int> RefineOutputList { get; }
+    public IReadOnlyDictionary<TypedValue<Mineral>, int> RefineOutputList { get; init; }
 
-    public decimal VolumePerUnit { get; }
+    public VolumeValue VolumePerUnit { get; init; }
 
-    protected Ore(decimal volumePerUnit, IReadOnlyDictionary<Type, int> refinementMineralsList)
+    protected Ore(VolumeValue volumePerUnit, IReadOnlyDictionary<Mineral, NonNegativeInt> refinementMineralsList)
     {
-        if (volumePerUnit < 0)
+        Dictionary<TypedValue<Mineral>, int> mineralDict = new();
+
+        foreach (KeyValuePair<Mineral, NonNegativeInt> pair in refinementMineralsList)
         {
-            throw new ArgumentException("Negative volume per point");
-        }
-
-        Dictionary<Type, int> mineralDict = new();
-
-        foreach (KeyValuePair<Type, int> pair in refinementMineralsList)
-        {
-            if (pair.Value < 0)
-            {
-                throw new ArgumentException("Negative mineral output");
-            }
-
-            if (pair.Key.IsAssignableTo(typeof(Mineral)))
-            {
-                mineralDict.Add(pair.Key, pair.Value);
-            }
+            mineralDict.Add(new TypedValue<Mineral>(pair.Key), pair.Value.Value);
         }
 
         VolumePerUnit = volumePerUnit;

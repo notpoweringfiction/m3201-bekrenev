@@ -1,3 +1,5 @@
+using Itmo.ObjectOrientedProgramming.Lab1.Utils;
+
 namespace Itmo.ObjectOrientedProgramming.Lab1;
 
 public abstract class Contract
@@ -9,8 +11,8 @@ public abstract class Contract
         int WorkTime,
         int HarvestCyclesAmount,
         decimal TotalHarvestedVolume,
-        IReadOnlyDictionary<Type, int> StoragedOre,
-        IReadOnlyDictionary<Type, int> SoldMinerals,
+        IReadOnlyDictionary<TypedValue<Ore>, int> StoragedOre,
+        IReadOnlyDictionary<TypedValue<Mineral>, int> SoldMinerals,
         decimal TotalRevenue,
         decimal TotalRent,
         decimal TaxesAmount,
@@ -46,7 +48,7 @@ public abstract class Contract
         ContractStation = contractStation;
         ValidationStatus = ValidateContract();
 
-        TimeToField = selectedBelt.Distance / selectedFleet.Speed;
+        TimeToField = selectedBelt.Distance.Value / selectedFleet.Speed.Value;
         TotalWorkTime = 0;
     }
 
@@ -71,7 +73,7 @@ public abstract class Contract
         decimal taxes = 0;
         decimal netProfit = 0;
 
-        Dictionary<Type, int> soldMinerals = new();
+        Dictionary<TypedValue<Mineral>, int> soldMinerals = new();
 
         while (CanStartVoyage())
         {
@@ -80,14 +82,14 @@ public abstract class Contract
             totalHarvestedOre += curVoyageHarvest;
             UpdateStateAfterVoyage(curVoyageHarvest);
 
-            ContractStation.ProcessOres(TargetAsteroidBelt.BeltOreType, new PairDataPack<Ore, int>(TargetAsteroidBelt.BeltOre, curVoyageHarvest));
+            ContractStation.ProcessOres(new TypedValue<Ore>(TargetAsteroidBelt.BeltOre), new NonNegativeInt(curVoyageHarvest));
             Station.SaleReport mineralSaleReport = ContractStation.SellMinerals(PriceList);
 
             totalRevenue += mineralSaleReport.TotalRevenue;
             taxes += mineralSaleReport.Taxes;
             netProfit += mineralSaleReport.NetProfit;
 
-            foreach (KeyValuePair<Type, int> pair in mineralSaleReport.SoldMinerals)
+            foreach (KeyValuePair<TypedValue<Mineral>, int> pair in mineralSaleReport.SoldMinerals)
             {
                 soldMinerals.TryAdd(pair.Key, 0);
                 soldMinerals[pair.Key] += pair.Value;
@@ -98,11 +100,11 @@ public abstract class Contract
             curVoyage++;
         }
 
-        Dictionary<Type, int> storagedOre = new();
+        Dictionary<TypedValue<Ore>, int> storagedOre = new();
 
-        foreach (KeyValuePair<Type, MutablePairPack<Ore, int>> pair in ContractStation.OreStorage)
+        foreach (KeyValuePair<TypedValue<Ore>, int> pair in ContractStation.OreStorage)
         {
-            storagedOre.TryAdd(pair.Key, pair.Value.Second);
+            storagedOre.TryAdd(pair.Key, pair.Value);
         }
 
         return new ContractSuccess(
@@ -112,9 +114,9 @@ public abstract class Contract
             StoragedOre: storagedOre,
             SoldMinerals: soldMinerals,
             TotalRevenue: totalRevenue,
-            TotalRent: TotalWorkTime * ContractFleet.UpkeerPerTimeUnit,
+            TotalRent: TotalWorkTime * ContractFleet.UpkeerPerTimeUnit.Value,
             TaxesAmount: taxes,
-            NetProfit: netProfit - (TotalWorkTime * ContractFleet.UpkeerPerTimeUnit));
+            NetProfit: netProfit - (TotalWorkTime * ContractFleet.UpkeerPerTimeUnit.Value));
     }
 
     protected abstract bool CanStartVoyage();
@@ -163,9 +165,9 @@ public abstract class Contract
                 Error: new FleetError("Fleet can't mine first cycle"));
         }
 
-        foreach (KeyValuePair<Type, int> mineralOutput in TargetAsteroidBelt.BeltOre.RefineOutputList)
+        foreach (KeyValuePair<TypedValue<Mineral>, int> mineralOutput in TargetAsteroidBelt.BeltOre.RefineOutputList)
         {
-            if (!PriceList.PriceList.ContainsKey(mineralOutput.Key))
+            if (!PriceList.Value.ContainsKey(mineralOutput.Key.ValueType))
             {
                 return new ValidationInfo.ContractInvalid(
                     Error: new PriceListError(mineralOutput.Key.ToString() + " absent in price list"));

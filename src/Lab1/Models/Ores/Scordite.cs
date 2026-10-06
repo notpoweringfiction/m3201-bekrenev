@@ -1,13 +1,16 @@
+using Itmo.ObjectOrientedProgramming.Lab1.Models.Minerals;
+using Itmo.ObjectOrientedProgramming.Lab1.Utils;
+
 namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Ores;
 
 public record Scordite : Ore
 {
     public Scordite() : base(
-        volumePerUnit: 0.15m,
-        refinementMineralsList: new Dictionary<Type, int>
+        volumePerUnit: new VolumeValue(0.15m),
+        refinementMineralsList: new Dictionary<Mineral, NonNegativeInt>
         {
-            [typeof(Minerals.Tritanium)] = 75,
-            [typeof(Minerals.Pyerite)] = 55,
+            [new Tritanium()] = new NonNegativeInt(75),
+            [new Pyerite()] = new NonNegativeInt(55),
         })
     {
     }

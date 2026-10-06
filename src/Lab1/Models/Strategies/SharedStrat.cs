@@ -1,3 +1,5 @@
+using Itmo.ObjectOrientedProgramming.Lab1.Utils;
+
 namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Strategies;
 
 public class SharedStrat : Strategy
@@ -8,7 +10,7 @@ public class SharedStrat : Strategy
 
         foreach (Ship ship in shipsList)
         {
-            int stored = ship.CargoHold.StoreCargo(oreToStore);
+            int stored = ship.CargoHold.StoreCargo(new NonNegativeInt(oreToStore));
             oreToStore -= stored;
         }
 

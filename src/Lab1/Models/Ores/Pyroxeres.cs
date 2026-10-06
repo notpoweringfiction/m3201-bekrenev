@@ -1,13 +1,16 @@
+using Itmo.ObjectOrientedProgramming.Lab1.Models.Minerals;
+using Itmo.ObjectOrientedProgramming.Lab1.Utils;
+
 namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Ores;
 
 public record Pyroxeres : Ore
 {
     public Pyroxeres() : base(
-        volumePerUnit: 0.3m,
-        refinementMineralsList: new Dictionary<Type, int>
+        volumePerUnit: new VolumeValue(0.3m),
+        refinementMineralsList: new Dictionary<Mineral, NonNegativeInt>
         {
-            [typeof(Minerals.Pyerite)] = 45,
-            [typeof(Minerals.Mexallon)] = 15,
+            [new Pyerite()] = new NonNegativeInt(45),
+            [new Mexallon()] = new NonNegativeInt(15),
         })
     {
     }

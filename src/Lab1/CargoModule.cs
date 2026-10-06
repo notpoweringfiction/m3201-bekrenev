@@ -1,32 +1,28 @@
+using Itmo.ObjectOrientedProgramming.Lab1.Utils;
+
 namespace Itmo.ObjectOrientedProgramming.Lab1;
 
 public class CargoModule
 {
-    public int MaxCargoStorage { get; init; }
+    public NonNegativeInt MaxCargoStorage { get; init; }
 
     public int StorageLeft { get; private set; }
 
-    public CargoModule(int maxCargoHold)
+    public CargoModule(NonNegativeInt maxCargoHold)
     {
-        if (maxCargoHold < 0)
-        {
-            throw new ArgumentException("Negative max cargo hold");
-        }
-
         MaxCargoStorage = maxCargoHold;
-        StorageLeft = maxCargoHold;
+        StorageLeft = maxCargoHold.Value;
     }
 
-    public int StoreCargo(int cargoAmount)
+    public int StoreCargo(NonNegativeInt cargoAmount)
     {
-        if (cargoAmount < 0) return 0;
-        int stored = Math.Min(cargoAmount, StorageLeft);
+        int stored = Math.Min(cargoAmount.Value, StorageLeft);
         StorageLeft -= stored;
         return stored;
     }
 
     public void ClearStorage()
     {
-        StorageLeft = MaxCargoStorage;
+        StorageLeft = MaxCargoStorage.Value;
     }
 }
