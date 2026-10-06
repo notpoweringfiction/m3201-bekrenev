@@ -12,7 +12,7 @@ public class OreTests
     public void Kernite_Instance_CanBeCreated()
     {
         // Arrange:
-        const string expectedToStringResult = "Kernite { RefineOutputList = System.Collections.Generic.Dictionary`2[System.Type,System.Int32], VolumePerUnit = 1,2 }";
+        const string expectedToStringResult = "Kernite { RefineOutputList = System.Collections.Generic.Dictionary`2[Itmo.ObjectOrientedProgramming.Lab1.Utils.TypedValue`1[Itmo.ObjectOrientedProgramming.Lab1.Mineral],System.Int32], VolumePerUnit = VolumeValue { Value = 1,2 } }";
 
         // Act:
         var kernite = new Kernite();
@@ -29,7 +29,7 @@ public class OreTests
     public void Isogen_Instance_CanBeCreated()
     {
         // Arrange:
-        const string expectedToStringResult = "Pyroxeres { RefineOutputList = System.Collections.Generic.Dictionary`2[System.Type,System.Int32], VolumePerUnit = 0,3 }";
+        const string expectedToStringResult = "Pyroxeres { RefineOutputList = System.Collections.Generic.Dictionary`2[Itmo.ObjectOrientedProgramming.Lab1.Utils.TypedValue`1[Itmo.ObjectOrientedProgramming.Lab1.Mineral],System.Int32], VolumePerUnit = VolumeValue { Value = 0,3 } }";
 
         // Act:
         var isogen = new Pyroxeres();
@@ -44,7 +44,7 @@ public class OreTests
     public void Scordite_Instance_CanBeCreated()
     {
         // Arrange:
-        const string expectedToStringResult = "Scordite { RefineOutputList = System.Collections.Generic.Dictionary`2[System.Type,System.Int32], VolumePerUnit = 0,15 }";
+        const string expectedToStringResult = "Scordite { RefineOutputList = System.Collections.Generic.Dictionary`2[Itmo.ObjectOrientedProgramming.Lab1.Utils.TypedValue`1[Itmo.ObjectOrientedProgramming.Lab1.Mineral],System.Int32], VolumePerUnit = VolumeValue { Value = 0,15 } }";
 
         // Act:
         var scordite = new Scordite();
@@ -59,7 +59,7 @@ public class OreTests
     public void Veldspar_Instance_CanBeCreated()
     {
         // Arrange:
-        const string expectedToStringResult = "Veldspar { RefineOutputList = System.Collections.Generic.Dictionary`2[System.Type,System.Int32], VolumePerUnit = 0,1 }";
+        const string expectedToStringResult = "Veldspar { RefineOutputList = System.Collections.Generic.Dictionary`2[Itmo.ObjectOrientedProgramming.Lab1.Utils.TypedValue`1[Itmo.ObjectOrientedProgramming.Lab1.Mineral],System.Int32], VolumePerUnit = VolumeValue { Value = 0,1 } }";
 
         // Act:
         var veldspar = new Veldspar();
