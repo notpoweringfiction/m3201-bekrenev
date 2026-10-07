@@ -5,19 +5,54 @@
 /// </summary>
 public class Calculator
 {
-    // private readonly ISomeDependency _firstDependency;
+    public record MappedContractResults(
+        int WorkTime,
+        int HarvestCyclesAmount,
+        decimal TotalHarvestedVolume,
+        IReadOnlyDictionary<Utils.TypedValue<Ore>, int> StoragedOre,
+        IReadOnlyDictionary<Utils.TypedValue<Mineral>, int> SoldMinerals,
+        decimal TotalRevenue,
+        decimal TotalRent,
+        decimal TaxesAmount,
+        decimal NetProfit);
 
-    /*
-    // Конструктор, реализующий принципы композиции
-    public Сalculator(ISomeDependency firstDependency)
+    public record CalculationResult
     {
-        _firstDependency = firstDependency;
+    }
+
+    public record CalculationSuccess(MappedContractResults Results) : CalculationResult
+    {
+    }
+
+    public record CalculationFailure(ContractError Error) : CalculationResult
+    {
     }
 
     public CalculationResult Calculate(Contract contract)
     {
-        // Some calculations...
-        return CalculationResult.Failure("Например, нарушены условия создания контракта");
+        Contract.ContractResults results = contract.ExecuteContract();
+
+        return results switch
+        {
+            Contract.ContractSuccess success => new CalculationSuccess(MapContractResults(success)),
+
+            Contract.ContractFailure failure => new CalculationFailure(failure.Error),
+
+            _ => new CalculationFailure(new UnknownError("Unknown contract output")),
+        };
     }
-    */
+
+    private MappedContractResults MapContractResults(Contract.ContractSuccess unmappedResults)
+    {
+        return new(
+            WorkTime: unmappedResults.WorkTime,
+            HarvestCyclesAmount: unmappedResults.HarvestCyclesAmount,
+            TotalHarvestedVolume: unmappedResults.TotalHarvestedVolume,
+            StoragedOre: unmappedResults.StoragedOre,
+            SoldMinerals: unmappedResults.SoldMinerals,
+            TotalRevenue: unmappedResults.TotalRevenue,
+            TotalRent: unmappedResults.TotalRent,
+            TaxesAmount: unmappedResults.TaxesAmount,
+            NetProfit: unmappedResults.NetProfit);
+    }
 }

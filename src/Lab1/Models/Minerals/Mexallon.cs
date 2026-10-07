@@ -1,5 +1,5 @@
 namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Minerals;
 
-public record Tritanium : Mineral
+public record Mexallon() : Mineral
 {
 }

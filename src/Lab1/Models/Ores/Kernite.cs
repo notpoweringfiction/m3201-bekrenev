@@ -3,13 +3,14 @@ using Itmo.ObjectOrientedProgramming.Lab1.Utils;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Ores;
 
-public record Veldspar : Ore
+public record Kernite : Ore
 {
-    public Veldspar() : base(
-        volumePerUnit: new VolumeValue(0.1m),
+    public Kernite() : base(
+        volumePerUnit: new VolumeValue(1.2m),
         refinementMineralsList: new Dictionary<Mineral, NonNegativeInt>
         {
-            [new Tritanium()] = new NonNegativeInt(200),
+            [new Mexallon()] = new NonNegativeInt(30),
+            [new Isogen()] = new NonNegativeInt(60),
         })
     {
     }
