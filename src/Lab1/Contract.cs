@@ -133,7 +133,7 @@ public abstract class Contract
             int cycleMined = 0;
             foreach (Ship ship in ContractFleet.Ships)
             {
-                int curMined = ship.SimulateHarvestCycle(curHarvestCycle);
+                int curMined = ship.Model.SimulateHarvestCycle(curHarvestCycle);
                 if (!ContractFleet.Strategy.TryStoringOre(curMined, ship, ContractFleet.Ships)) continue;
                 cycleMined += curMined;
             }

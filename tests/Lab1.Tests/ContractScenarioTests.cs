@@ -67,7 +67,7 @@ public class ContractScenarioTests
 
         _defaultBelt = new AsteroidBelt("Пояс A", new DistanceValue(4), new Veldspar());
 
-        _defaultFleet = new Fleet(new List<Ship> { new Venture() }, _defaultStrategy);
+        _defaultFleet = new Fleet(new List<Ship> { new Ship(new Venture()) }, _defaultStrategy);
 
         _defaultStation = new Station(new TaxValue(0));
 

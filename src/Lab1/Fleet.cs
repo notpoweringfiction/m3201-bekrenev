@@ -23,8 +23,8 @@ public class Fleet
         int totalUpkeep = 0;
         foreach (Ship ship in shipsList)
         {
-            maxShipSpeed = Math.Min(maxShipSpeed, ship.Speed.Value);
-            totalUpkeep += ship.RentRate.Value;
+            maxShipSpeed = Math.Min(maxShipSpeed, ship.Model.Speed.Value);
+            totalUpkeep += ship.Model.RentRate.Value;
         }
 
         UpkeerPerTimeUnit = new NonNegativeInt(totalUpkeep);
@@ -37,7 +37,7 @@ public class Fleet
     {
         foreach (Ship curShip in Ships)
         {
-            if (curShip.SimulateHarvestCycle(1) > 0)
+            if (curShip.Model.SimulateHarvestCycle(1) > 0)
             {
                 return true;
             }

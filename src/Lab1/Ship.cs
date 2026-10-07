@@ -1,21 +1,14 @@
-using Itmo.ObjectOrientedProgramming.Lab1.Utils;
-
 namespace Itmo.ObjectOrientedProgramming.Lab1;
 
-public abstract class Ship
+public class Ship
 {
     public CargoModule CargoHold { get; init; }
 
-    public SpeedValue Speed { get; init; }
+    public ShipModel Model { get; init; }
 
-    public RentValue RentRate { get; init; }
-
-    protected Ship(CargoModule cargoModule, SpeedValue maxSpeed, RentValue rentRate)
+    public Ship(ShipModel shipModel)
     {
-        CargoHold = cargoModule;
-        Speed = maxSpeed;
-        RentRate = rentRate;
+        CargoHold = new CargoModule(shipModel.MaxCargoVolume);
+        Model = shipModel;
     }
-
-    public abstract int SimulateHarvestCycle(int simCycle);
 }
