@@ -4,7 +4,7 @@ namespace Itmo.ObjectOrientedProgramming.Lab1;
 
 public abstract class Ship
 {
-    public CargoModule CargoHold { get; }
+    public CargoModule CargoHold { get; init; }
 
     public SpeedValue Speed { get; init; }
 

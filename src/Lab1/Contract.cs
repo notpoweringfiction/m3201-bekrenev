@@ -27,7 +27,7 @@ public abstract class Contract
 
     public MineralPriceData PriceList { get; init; }
 
-    public Station ContractStation { get; }
+    public Station ContractStation { get; init; }
 
     public record ValidationInfo()
     {
